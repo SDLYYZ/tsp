@@ -1,4 +1,4 @@
-/* global QuoteSearch */
+/* global QuoteSearch GetTangYan */
 
 "use strict";
 
@@ -14,6 +14,7 @@ window.onload = () => {
   timeText = document.getElementById("time");
   UpdateTime();
   setInterval(UpdateTime, 1000);
+  GetTangYan();
   document.onkeypress = (ev) => {
     if (
       document.activeElement == document.body &&

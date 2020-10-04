@@ -67,6 +67,19 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+#tang-yan {
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  color: white;
+  top: 80%;
+  transition: 0.5s;
+}
+
+#search:focus ~ #tang-yan {
+  top: 90%;
+}
+
 @media screen and (min-width: 1080px) {
   body {
     font-size: 18px;
