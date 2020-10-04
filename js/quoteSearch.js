@@ -153,6 +153,11 @@ const quoteSearchSources = [
     prefixes: ["wa", "wolfram"],
     url: "https://www.wolframalpha.com/input/?i=%s",
   },
+  {
+    name: "bilibili",
+    prefixes: ["bili", "bilibili"],
+    url: "https://search.bilibili.com/all?keyword=%s",
+  },
 ];
 
 function QuoteSearch(val) {
@@ -163,13 +168,19 @@ function QuoteSearch(val) {
   let matched = quoteSearchSources.some((source) => {
     return source.prefixes.some((prefix) => {
       if ("'" + prefix === firstWord) {
-        window.location = source.url.replace("%s", elseWords);
+        window.location = source.url.replace(
+          "%s",
+          encodeURIComponent(elseWords)
+        );
         return true;
       }
     });
   });
   if (!matched) {
     // 默认使用 bing
-    window.location = quoteSearchSources[0].url.replace("%s", val);
+    window.location = quoteSearchSources[0].url.replace(
+      "%s",
+      encodeURIComponent(val)
+    );
   }
 }

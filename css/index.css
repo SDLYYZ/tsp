@@ -74,7 +74,8 @@
   color: white;
   top: 80%;
   transition: 0.5s;
-  font-size: 0.8em;
+  font-size: 0.9em;
+  text-shadow: rgba(0, 0, 0, 0.5) 0 0 10px;
 }
 
 #search:focus ~ #tang-yan {

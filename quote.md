@@ -32,3 +32,4 @@
 | twitter               | twit, tweet, twitter | https://twitter.com/search?q=%s                                      |
 | gaode map             | gdmap, gaodemap      | https://ditu.amap.com/search?query=%s                                |
 | wolframalpha          | wa, wolfram          | https://www.wolframalpha.com/input/?i=%s                             |
+| bilibili              | bili, bilibili       | https://search.bilibili.com/all?keyword=%s                           |
