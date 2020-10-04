@@ -1,0 +1,88 @@
+#bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -999;
+}
+
+#search {
+  position: fixed;
+  text-align: center;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 50%;
+  font-size: 1em;
+  width: 20em;
+  line-height: 2.5em;
+  background: rgba(255, 255, 255, .25);
+  box-shadow: rgba(0, 0, 0, .2) 0 0 20px;
+  overflow: hidden;
+  color: white;
+  border: none;
+  border-radius: 3em;
+  outline: none;
+  backdrop-filter: blur(10px);
+  transition: 0.5s;
+}
+
+#search:focus {
+  top: 30%;
+  width: 70%;
+  background: rgba(255, 255, 255, .5);
+  color: black;
+}
+
+#time {
+  position: fixed;
+  color: white;
+  width: 100%;
+  height: 1em;
+  line-height: 1em;
+  text-align: center;
+  font-size: 5em;
+  top: 30%;
+  text-shadow: rgba(0, 0, 0, .5) 0 0 10px;
+  transition: 0.5s;
+}
+
+#search:focus~#time {
+  font-size: 3.5em;
+  top: 15%;
+}
+
+#cover {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -888;
+  transition: 0.5s;
+}
+
+#search:focus~#cover {
+  background-color: rgba(0, 0, 0, .5);
+}
+
+@media screen and (min-width: 1080px) {
+  body {
+    font-size: 18px;
+  }
+
+  #search:focus {
+    width: 60%;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  body {
+    font-size: 20px;
+  }
+
+  #search:focus {
+    width: 50%;
+  }
+}
