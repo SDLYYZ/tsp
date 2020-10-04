@@ -21,7 +21,7 @@ window.onload = () => {
       !ev.ctrlKey &&
       ev.key != "Enter"
     ) {
-      searchBar.placeholder = "Search...";
+      searchBar.placeholder = "Search";
       searchBar.disabled = false;
       searchBar.focus();
       if (ev.key == " ") {
