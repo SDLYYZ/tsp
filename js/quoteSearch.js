@@ -126,12 +126,12 @@ const quoteSearchSources = [
   {
     name: "codeforces.ml",
     prefixes: ["cfml", "codeforcesml"],
-    url: "http://codeforces.ml/search?by=&query=%s",
+    url: "https://codeforces.ml/search?by=&query=%s",
   },
   {
     name: "codeforc.es",
     prefixes: ["cfes", "codeforceses"],
-    url: "http://codeforc.es/search?by=&query=%s",
+    url: "https://codeforc.es/search?by=&query=%s",
   },
   {
     name: "macwk",
