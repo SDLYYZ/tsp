@@ -1,10 +1,12 @@
-'use strict';
+/* global QuoteSearch */
+
+"use strict";
 
 let searchBar;
 let timeText;
 
 function UpdateTime() {
-  timeText.innerHTML = (new Date()).format("hh:mm");
+  timeText.innerHTML = new Date().format("hh:mm");
 }
 
 window.onload = () => {
@@ -13,7 +15,11 @@ window.onload = () => {
   UpdateTime();
   setInterval(UpdateTime, 1000);
   document.onkeypress = (ev) => {
-    if (document.activeElement == document.body && !ev.ctrlKey && ev.key != "Enter") {
+    if (
+      document.activeElement == document.body &&
+      !ev.ctrlKey &&
+      ev.key != "Enter"
+    ) {
       searchBar.placeholder = "Search...";
       searchBar.disabled = false;
       searchBar.focus();
@@ -22,7 +28,7 @@ window.onload = () => {
         return false;
       }
     }
-  }
+  };
   searchBar.onkeypress = (ev) => {
     if (ev.key == "Enter") {
       QuoteSearch(searchBar.value);
@@ -30,5 +36,5 @@ window.onload = () => {
       searchBar.placeholder = "Searching...";
       searchBar.value = "";
     }
-  }
-}
+  };
+};

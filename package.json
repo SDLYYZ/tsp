@@ -1,0 +1,14 @@
+{
+  "name": "tsp",
+  "version": "",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "",
+  "devDependencies": {
+    "eslint": "^7.10.0"
+  }
+}
