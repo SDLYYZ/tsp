@@ -4,6 +4,16 @@
 
 ~~唐页~~ [Tang Start Page](https://github.com/yzy-1/tsp) 是由 lyoi 成员制作的一款起始页. 是一个界面简洁, 实用的网页. 您可以将其设置为浏览器启动页, 主页或新标签页.
 
+## 如何安装
+
+Tsp 是直接由 html, css 和 js 写成的, 因此您不需要编译, 可以直接克隆或者下载本仓库, 并打开根目录下的 index.html 来使用 tsp.
+
+### 具体步骤
+
+1. 点击右上角绿色的 "Code" 按钮, 选择 "Download with ZIP"
+1. 解压得到的文件
+1. 用浏览器打开 `index.html` 即可
+
 ## 引号搜索
 
 引号搜索是一个类似类似于 duckduckgo [Bang!](https://duckduckgo.com/bang) 的功能, 只不过将叹号 <kbd>!</kbd> 更换成了在键盘上更容易按到的引号 <kbd>'</kbd>, 并且增加了更多中国用户 / OIER 常用的网站.

@@ -31,3 +31,4 @@
 | macwk                 | macwk                | https://macwk.com/soft/all/s-%s/p1                                   |
 | twitter               | twit, tweet, twitter | https://twitter.com/search?q=%s                                      |
 | gaode map             | gdmap, gaodemap      | https://ditu.amap.com/search?query=%s                                |
+| wolframalpha          | wa, wolfram          | https://www.wolframalpha.com/input/?i=%s                             |

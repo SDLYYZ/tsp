@@ -148,6 +148,11 @@ const quoteSearchSources = [
     prefixes: ["gdmap", "gaodemap"],
     url: "https://ditu.amap.com/search?query=%s",
   },
+  {
+    name: "wolframalpha",
+    prefixes: ["wa", "wolfram"],
+    url: "https://www.wolframalpha.com/input/?i=%s",
+  },
 ];
 
 function QuoteSearch(val) {
