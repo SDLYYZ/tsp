@@ -43,7 +43,7 @@
   margin: 0 auto;
   opacity: 0;
   visibility: hidden;
-  top: 35%;
+  top: 37%;
   width: 70%;
   color: white;
   transition: 0.3s;
@@ -120,6 +120,12 @@
 
 #search:focus ~ #tang-yan {
   top: 90%;
+}
+
+@media screen and (min-height: 800px) {
+  #suggestions {
+    top: 35%;
+  }
 }
 
 @media screen and (min-width: 1080px) {

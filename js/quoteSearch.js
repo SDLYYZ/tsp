@@ -86,8 +86,8 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["jd", "jingdong"],
       url: "https://search.jd.com/Search?keyword=%s&enc=utf-8",
       suggest:
-        "https://suggestion.baidu.com/su?"+
-        "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
+        "https://suggest.taobao.com/sug?code=utf-8"+
+        "&q=%s&callback=QuoteSearch.WriteTaobaoSuggestion",
     },
     {
       name: "wikipedia",
@@ -292,7 +292,16 @@ let QuoteSearch = window.QuoteSearch || {
 
   WriteBaiduSuggestion: function (data) {
     let text = "";
-    data.s.forEach((res) => {
+    let winHeight = $(window).height();
+    let slicedData;
+    if (winHeight <= 700) {
+      slicedData = data.s.slice(0, 6);
+    } else if (winHeight <= 800) {
+      slicedData = data.s.slice(0, 8);
+    } else {
+      slicedData = data.s.slice(0, 10);
+    }
+    slicedData.forEach((res) => {
       text += `<div>${res}</div>`;
     });
     QuoteSearch.wrap.html(text);
