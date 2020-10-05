@@ -36,6 +36,41 @@
   color: black;
 }
 
+#suggestions {
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  opacity: 0;
+  visibility: hidden;
+  top: 35%;
+  width: 70%;
+  color: white;
+  transition: 0.3s;
+}
+
+#search:focus:valid ~ #suggestions {
+  opacity: 1;
+  visibility: visible;
+}
+
+#suggestions > div {
+  background: transparent;
+  margin: 0.5em 0;
+  padding: 0 2em;
+  line-height: 2em;
+  height: 2em;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: rgba(0, 0, 0, 0.2) 0 0 20px;
+  text-shadow: rgba(0, 0, 0, 0.5) 0 0 10px;
+  overflow: hidden;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 0.3em;
+  backdrop-filter: blur(10px);
+}
+
 #time {
   position: fixed;
   color: white;
@@ -91,6 +126,10 @@
   #search:focus {
     width: 60%;
   }
+
+  #suggestions {
+    width: 55%;
+  }
 }
 
 @media screen and (min-width: 1400px) {
@@ -100,5 +139,8 @@
 
   #search:focus {
     width: 50%;
+  }
+  #suggestions {
+    width: 45%;
   }
 }

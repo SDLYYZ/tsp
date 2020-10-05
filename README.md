@@ -2,7 +2,7 @@
 
 ## 这是什么
 
-~~唐页~~ [Tang Start Page](https://github.com/yzy-1/tsp) 是由 lyoi 成员制作的一款起始页. 是一个界面简洁, 实用的网页. 您可以将其设置为浏览器启动页, 主页或新标签页.
+~~唐页~~ [Tang Start Page](https://github.com/SDLYYZ/tsp) 是由 lyoi 成员制作的一款起始页. 是一个界面简洁, 实用的网页. 您可以将其设置为浏览器启动页, 主页或新标签页.
 
 ## 如何安装
 

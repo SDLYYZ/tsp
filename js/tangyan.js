@@ -9,6 +9,7 @@ function GetTangYan() {
   let obj = document.createElement("script");
   obj.src = tangYanUrl;
   document.body.appendChild(obj);
+  obj.remove();
 }
 
 function WriteTangYan(obj) {

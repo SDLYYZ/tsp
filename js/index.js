@@ -2,40 +2,67 @@
 
 "use strict";
 
-let searchBar;
-let timeText;
+$(() => {
+  let searchBar = $("#search");
+  let timeText = $("#time");
+  let suggestionsWrap = $("#suggestions");
 
-function UpdateTime() {
-  timeText.innerHTML = new Date().format("hh:mm");
-}
+  function UpdateTime() {
+    timeText.html(new Date().format("hh:mm"));
+  }
 
-window.onload = () => {
-  searchBar = document.getElementById("search");
-  timeText = document.getElementById("time");
   UpdateTime();
   setInterval(UpdateTime, 1000);
   GetTangYan();
-  document.onkeypress = (ev) => {
+  QuoteSearch.Init(suggestionsWrap);
+
+  $(document).on("keydown", (ev) => {
     if (
       document.activeElement == document.body &&
       !ev.ctrlKey &&
       ev.key != "Enter"
     ) {
-      searchBar.placeholder = "Search";
-      searchBar.disabled = false;
-      searchBar.focus();
+      searchBar.attr("placeholder", "Search");
+      searchBar.removeAttr("disabled");
+      searchBar[0].focus();
       if (ev.key == " ") {
-        searchBar.value = "";
+        searchBar.val("");
         return false;
       }
     }
-  };
-  searchBar.onkeypress = (ev) => {
-    if (ev.key == "Enter") {
-      QuoteSearch(searchBar.value);
-      searchBar.disabled = true;
-      searchBar.placeholder = "Searching...";
-      searchBar.value = "";
+  });
+
+  searchBar.on("keydown", (ev) => {
+    switch (ev.key) {
+    case "Enter":
+      QuoteSearch.Search(QuoteSearch.selectedSuggestion >= 0 ?
+        QuoteSearch.wrap.children().eq( QuoteSearch.selectedSuggestion).text():
+        searchBar.val(), ev.shiftKey);
+      if (!ev.shiftKey) {
+        searchBar.attr("disabled", "disabled");
+        searchBar.attr("placeholder", "Searching...");
+      }
+      searchBar.val("");
+      break;
+    case "ArrowUp":
+      QuoteSearch.SelectUp();
+      ev.preventDefault();
+      break;
+    case "ArrowDown":
+      QuoteSearch.SelectDown();
+      ev.preventDefault();
+      break;
     }
-  };
-};
+  });
+  searchBar.on("keyup", (ev) => {
+    if(ev.key ==  "Escape") {
+      searchBar[0].blur();
+    }
+  });
+  searchBar.on("input", () => {
+    if (searchBar.val() != "") {
+      QuoteSearch.GetSuggestion(searchBar.val());
+      QuoteSearch.Blur();
+    }
+  });
+});
