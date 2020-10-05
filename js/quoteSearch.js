@@ -7,7 +7,7 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["b", "bing"],
       url: "https://www.bing.com/search?q=%s",
       suggest:
-        "http://suggestion.baidu.com/su?"+
+        "https://suggestion.baidu.com/su?"+
         "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
     },
     {
@@ -15,7 +15,7 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["bd", "baidu"],
       url: "https://www.baidu.com/s?ie=utf-8&wd=%s",
       suggest:
-        "http://suggestion.baidu.com/su?"+
+        "https://suggestion.baidu.com/su?"+
         "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
     },
     {
@@ -23,7 +23,7 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["g", "gg", "google"],
       url: "https://www.google.com/search?q=%s",
       suggest:
-        "http://suggestion.baidu.com/su?"+
+        "https://suggestion.baidu.com/su?"+
         "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
     },
     {
@@ -35,7 +35,7 @@ let QuoteSearch = window.QuoteSearch || {
     {
       name: "oeis",
       prefixes: ["oeis"],
-      url: "http://oeis.org/search?q=%s",
+      url: "https://oeis.org/search?q=%s",
     },
     {
       name: "google translate",
@@ -62,7 +62,7 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["ddg", "duckduckgo"],
       url: "https://duckduckgo.com/?q=%s",
       suggest:
-        "http://suggestion.baidu.com/su?"+
+        "https://suggestion.baidu.com/su?"+
         "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
     },
     {
@@ -70,7 +70,7 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["mj", "mjsou"],
       url: "https://mijisou.com/?q=%s",
       suggest:
-        "http://suggestion.baidu.com/su?"+
+        "https://suggestion.baidu.com/su?"+
         "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
     },
     {
@@ -78,7 +78,7 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["lk", "lookao"],
       url: "https://lookao.com/search?q=%s",
       suggest:
-        "http://suggestion.baidu.com/su?"+
+        "https://suggestion.baidu.com/su?"+
         "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
     },
     {
@@ -86,7 +86,7 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["jd", "jingdong"],
       url: "https://search.jd.com/Search?keyword=%s&enc=utf-8",
       suggest:
-        "http://suggestion.baidu.com/su?"+
+        "https://suggestion.baidu.com/su?"+
         "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
     },
     {
@@ -104,7 +104,7 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["ya", "yandex"],
       url: "https://yandex.com/search/?text=%s",
       suggest:
-        "http://suggestion.baidu.com/su?"+
+        "https://suggestion.baidu.com/su?"+
         "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
     },
     {
@@ -224,7 +224,7 @@ let QuoteSearch = window.QuoteSearch || {
 
   Search: function (kw, newtab = false) {
     let splitedKw = kw.split(" ");
-    let firstWord = splitedKw[0];
+    let firstWord = splitedKw[0].toLowerCase();
     splitedKw.shift();
     let elseWords = splitedKw.join(" ");
     let matched = QuoteSearch.sources.some((source) => {
@@ -264,7 +264,7 @@ let QuoteSearch = window.QuoteSearch || {
 
   GetSuggestion: function (kw) {
     let splitedKw = kw.split(" ");
-    let firstWord = splitedKw[0];
+    let firstWord = splitedKw[0].toLowerCase();
     splitedKw.shift();
     let elseWords = splitedKw.join(" ");
     let matched = QuoteSearch.sources.some((source) => {
