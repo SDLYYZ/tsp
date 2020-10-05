@@ -50,4 +50,5 @@ Tsp 是直接由 html, css 和 js 写成的, 因此您不需要编译, 可以直
 
 - 感谢 [青柠起始页](https://a.maorx.cn) 给予创作灵感.
 - 感谢 [杨尚臻](https://www.yangshangzhen.com/bing) 提供微软 bing 壁纸 API.
-- 感谢 lyoi 参与测试的成员
+- 感谢 SDLYYZ 成员提供 [唐言 API](https://github.com/SDLYYZ/Tangokoto).
+- 感谢 lyoi 参与测试的成员.
