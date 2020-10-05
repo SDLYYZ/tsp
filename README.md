@@ -14,7 +14,7 @@ Tsp 是直接由 html, css 和 js 写成的, 因此您不需要编译, 可以直
 
 > 若需手动安装, 请按照下面的步骤操作:
 >
-> 1. 点击右上角绿色的 "Code" 按钮, 选择 "Download with ZIP"
+> 1. 点击右上角绿色的 "Code" 按钮, 选择 "Download ZIP"
 > 1. 解压得到的文件
 > 1. 用浏览器打开 `index.html` 即可
 
@@ -31,6 +31,8 @@ Tsp 是直接由 html, css 和 js 写成的, 因此您不需要编译, 可以直
 ```
 
 再按下回车即可.
+
+> tips: 在搜索框中按下 <kbd>Shift</kbd> + <kbd>Enter</kbd> 可以在新标签页打开搜索结果.
 
 ### 支持的搜索引擎
 
