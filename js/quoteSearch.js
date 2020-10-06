@@ -7,7 +7,7 @@ let QuoteSearch = window.QuoteSearch || {
       suggest:
         "https://api.bing.com/qsonhs.aspx?" +
         "type=cb&q=%s&count=10&safesearch=Strict" +
-        "&cb=QuoteSearch.WriteBingSuggestion",
+        "&cb=QuoteSearch.Suggest.WriteBing",
     },
     {
       name: "baidu",
@@ -15,15 +15,15 @@ let QuoteSearch = window.QuoteSearch || {
       url: "https://www.baidu.com/s?ie=utf-8&wd=%s",
       suggest:
         "https://suggestion.baidu.com/su?" +
-        "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
+        "wd=%s&cb=QuoteSearch.Suggest.WriteBaidu",
     },
     {
       name: "google",
       prefixes: ["g", "gg", "google"],
       url: "https://www.google.com/search?q=%s",
       suggest:
-        "http://suggestqueries.google.com/complete/search?client=youtube" +
-        "&q=%s&jsonp=QuoteSearch.WriteGoogleSuggestion",
+        "https://suggestqueries.google.com/complete/search?client=youtube" +
+        "&q=%s&jsonp=QuoteSearch.Suggest.WriteGoogle",
     },
     {
       name: "luogu",
@@ -63,7 +63,7 @@ let QuoteSearch = window.QuoteSearch || {
       suggest:
         "https://api.bing.com/qsonhs.aspx?" +
         "type=cb&q=%s&count=10&safesearch=Strict" +
-        "&cb=QuoteSearch.WriteBingSuggestion",
+        "&cb=QuoteSearch.Suggest.WriteBing",
     },
     {
       name: "miji search",
@@ -71,7 +71,7 @@ let QuoteSearch = window.QuoteSearch || {
       url: "https://mijisou.com/?q=%s",
       suggest:
         "https://suggestion.baidu.com/su?" +
-        "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
+        "wd=%s&cb=QuoteSearch.Suggest.WriteBaidu",
     },
     {
       name: "lookao",
@@ -79,7 +79,7 @@ let QuoteSearch = window.QuoteSearch || {
       url: "https://lookao.com/search?q=%s",
       suggest:
         "https://suggestion.baidu.com/su?" +
-        "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
+        "wd=%s&cb=QuoteSearch.Suggest.WriteBaidu",
     },
     {
       name: "jingdong",
@@ -87,7 +87,7 @@ let QuoteSearch = window.QuoteSearch || {
       url: "https://search.jd.com/Search?keyword=%s&enc=utf-8",
       suggest:
         "https://suggest.taobao.com/sug?code=utf-8" +
-        "&q=%s&callback=QuoteSearch.WriteTaobaoSuggestion",
+        "&q=%s&callback=QuoteSearch.Suggest.WriteTaobao",
     },
     {
       name: "wikipedia",
@@ -106,7 +106,7 @@ let QuoteSearch = window.QuoteSearch || {
       suggest:
         "https://api.bing.com/qsonhs.aspx?" +
         "type=cb&q=%s&count=10&safesearch=Strict" +
-        "&cb=QuoteSearch.WriteBingSuggestion",
+        "&cb=QuoteSearch.Suggest.WriteBing",
     },
     {
       name: "oiwki",
@@ -185,15 +185,11 @@ let QuoteSearch = window.QuoteSearch || {
     },
   ],
 
-  wrap: $(),
   searchBar: $(),
 
-  // 当前选中的 suggestion 的 index, -1 表示未选中
-  selectedSuggestion: -1,
-
-  Init: (searchBar, wrap) => {
+  Init: (searchBar, suggestionWrap) => {
     QuoteSearch.searchBar = searchBar;
-    QuoteSearch.wrap = wrap;
+    QuoteSearch.Suggest.wrap = suggestionWrap;
     searchBar.on("keydown", (ev) => {
       switch (ev.key) {
         case "Enter":
@@ -206,11 +202,11 @@ let QuoteSearch = window.QuoteSearch || {
           searchBar.val("");
           break;
         case "ArrowUp":
-          QuoteSearch.SelectUp();
+          QuoteSearch.Suggest.SelectUp();
           ev.preventDefault();
           break;
         case "ArrowDown":
-          QuoteSearch.SelectDown();
+          QuoteSearch.Suggest.SelectDown();
           ev.preventDefault();
           break;
       }
@@ -222,48 +218,26 @@ let QuoteSearch = window.QuoteSearch || {
     });
     searchBar.on("input", () => {
       if (searchBar.val() !== "") {
-        QuoteSearch.GetSuggestion(searchBar.val());
-        QuoteSearch.Blur();
+        setTimeout(QuoteSearch.Suggest.Get()); // 异步查询
+        QuoteSearch.Suggest.Blur();
       }
     });
   },
 
-  UpdateCss: () => {
-    QuoteSearch.wrap.children().css("background", "rgba(255, 255, 255, 0.25)");
-    if (QuoteSearch.selectedSuggestion >= 0) {
-      QuoteSearch.wrap
-        .children()
-        .eq(QuoteSearch.selectedSuggestion)
-        .css("background", "rgba(0, 0, 0, 0.2)");
+  // 将 keyword 分为 `quotePrefix?` 和 `others` 两部分
+  SplitKeyword: (keyword) => {
+    let splitedKw = keyword.split(" ");
+    let firstWord = splitedKw[0].toLowerCase(); // 忽略大小写
+    // 以 `'` 开头
+    if (firstWord[0] !== "'") {
+      return { prefix: null, others: keyword };
+    } else {
+      splitedKw.shift();
+      let elseWords = splitedKw.join(" ");
+      // 将开头的 `'` 删除
+      return { prefix: firstWord.substr(1), others: elseWords };
     }
   },
-
-  Blur: () => {
-    QuoteSearch.selectedSuggestion = -1;
-    QuoteSearch.UpdateCss();
-  },
-
-  SelectUp: () => {
-    --QuoteSearch.selectedSuggestion;
-    if (QuoteSearch.selectedSuggestion < 0) {
-      QuoteSearch.selectedSuggestion = -1;
-    }
-    QuoteSearch.UpdateCss();
-  },
-
-  SelectDown: () => {
-    ++QuoteSearch.selectedSuggestion;
-    if (QuoteSearch.selectedSuggestion >= QuoteSearch.wrap.children().length) {
-      QuoteSearch.selectedSuggestion = QuoteSearch.wrap.children().length - 1;
-    }
-    QuoteSearch.UpdateCss();
-  },
-
-  // 返回 `obj` 或者当前选择的建议候选项文字
-  GetObjOrSelected: (obj) =>
-    QuoteSearch.selectedSuggestion >= 0
-      ? QuoteSearch.wrap.children().eq(QuoteSearch.selectedSuggestion).text()
-      : obj,
 
   Search: (newtab = false) => {
     // 打开搜索结果
@@ -271,102 +245,175 @@ let QuoteSearch = window.QuoteSearch || {
       window.open(
         url.replace(
           "%s",
-          encodeURIComponent(QuoteSearch.GetObjOrSelected(keyword)),
+          encodeURIComponent(QuoteSearch.Suggest.GetObjOrSelected(keyword)),
         ),
         newtab ? "_blank" : "_self",
       );
-    let kw = QuoteSearch.searchBar.val();
-    let splitedKw = kw.split(" ");
-    let firstWord = splitedKw[0].toLowerCase(); // 忽略大小写
-    splitedKw.shift();
-    let elseWords = splitedKw.join(" ");
+    let s = QuoteSearch.SplitKeyword(QuoteSearch.searchBar.val());
+    console.log(s);
     // 遍历每个搜索引擎
     // 如果前缀匹配, 就使用它
-    QuoteSearch.sources.some((source) =>
-      source.prefixes.some(
-        (pr) => "'" + pr === firstWord && openResult(source.url, elseWords),
-      ),
-    ) || openResult(QuoteSearch.sources[0].url, kw);
+    (s.prefix !== null &&
+      QuoteSearch.sources.some((source) =>
+        source.prefixes.some(
+          (pr) => pr === s.prefix && openResult(source.url, s.others),
+        ),
+      )) ||
+      openResult(QuoteSearch.sources[0].url, s.others);
   },
 
-  GetSuggestion: (kw) => {
-    let splitedKw = kw.split(" ");
-    let firstWord = splitedKw[0].toLowerCase();
-    splitedKw.shift();
-    let elseWords = splitedKw.join(" ");
-    let matched = QuoteSearch.sources.some((source) => {
-      return source.prefixes.some((prefix) => {
-        if ("'" + prefix === firstWord) {
-          if (source.suggest) {
-            let obj = document.createElement("script");
-            obj.src = source.suggest.replace(
-              "%s",
-              encodeURIComponent(elseWords),
-            );
-            document.body.appendChild(obj);
-            obj.remove();
-            return true;
-          }
-        }
-        return false;
+  // Suggest 子模块
+  Suggest: {
+    wrap: $(),
+
+    // 当前选中的 suggestion 的 index, -1 表示未选中
+    selected: -1,
+
+    UpdateCss: () => {
+      QuoteSearch.Suggest.wrap
+        .children()
+        .css("background", "rgba(255, 255, 255, 0.25)");
+      if (QuoteSearch.selectedSuggestion >= 0) {
+        QuoteSearch.Suggest.wrap
+          .children()
+          .eq(QuoteSearch.selectedSuggestion)
+          .css("background", "rgba(0, 0, 0, 0.2)");
+      }
+    },
+
+    Blur: () => {
+      QuoteSearch.selectedSuggestion = -1;
+      QuoteSearch.Suggest.UpdateCss();
+    },
+
+    SelectUp: () => {
+      --QuoteSearch.selectedSuggestion;
+      if (QuoteSearch.selectedSuggestion < 0) {
+        QuoteSearch.selectedSuggestion = -1;
+      }
+      QuoteSearch.Suggest.UpdateCss();
+    },
+
+    SelectDown: () => {
+      ++QuoteSearch.selectedSuggestion;
+      if (
+        QuoteSearch.selectedSuggestion >=
+        QuoteSearch.Suggest.wrap.children().length
+      ) {
+        QuoteSearch.selectedSuggestion =
+          QuoteSearch.Suggest.wrap.children().length - 1;
+      }
+      QuoteSearch.Suggest.UpdateCss();
+    },
+
+    // 返回 `obj` 或者当前选择的建议候选项文字
+    GetObjOrSelected: (obj) =>
+      QuoteSearch.selectedSuggestion >= 0
+        ? QuoteSearch.Suggest.wrap
+            .children()
+            .eq(QuoteSearch.selectedSuggestion)
+            .text()
+        : obj,
+
+    Get: () => {
+      let createScript = (url, keyword) => {
+        let obj = document.createElement("script");
+        obj.src = url.replace("%s", encodeURIComponent(keyword));
+        document.body.appendChild(obj);
+        obj.remove();
+        return true; // js 语法糖
+      };
+      let s = QuoteSearch.SplitKeyword(QuoteSearch.searchBar.val());
+      if (s.others === "" || s.others === null || s.others === undefined) {
+        QuoteSearch.Suggest.wrap.html("");
+        return;
+      }
+      // 遍历每个搜索引擎
+      // 如果前缀匹配, 就使用它
+      (s.prefix !== null &&
+        QuoteSearch.sources.some((source) =>
+          source.prefixes.some(
+            (prefix) =>
+              prefix === s.prefix &&
+              source.suggest !== undefined &&
+              createScript(source.suggest, s.others),
+          ),
+        )) ||
+        createScript(QuoteSearch.sources[0].suggest, s.others);
+    },
+
+    Slice: (items) => {
+      if (items === undefined || items === null) {
+        return [];
+      }
+      let winHeight = $(window).height();
+      if (winHeight <= 700) {
+        return items.slice(0, 6);
+      } else if (winHeight <= 800) {
+        return items.slice(0, 8);
+      } else {
+        return items.slice(0, 10);
+      }
+    },
+
+    WriteBing: (data) => {
+      let text = "";
+      let slicedData = [];
+      try {
+        slicedData = QuoteSearch.Suggest.Slice(data.AS.Results[0].Suggests);
+      } catch (TypeError) {
+        QuoteSearch.Suggest.wrap.html("");
+        return;
+      }
+      slicedData.forEach((res) => {
+        text += `<div>${res.Txt}</div>`;
       });
-    });
-    if (!matched) {
-      // 默认使用 bing
-      let obj = document.createElement("script");
-      obj.src = QuoteSearch.sources[0].suggest.replace(
-        "%s",
-        encodeURIComponent(kw),
-      );
-      document.body.appendChild(obj);
-      obj.remove();
-    }
-  },
+      QuoteSearch.Suggest.wrap.html(text);
+    },
 
-  SliceSuggestions: (items) => {
-    let winHeight = $(window).height();
-    if (winHeight <= 700) {
-      return items.slice(0, 6);
-    } else if (winHeight <= 800) {
-      return items.slice(0, 8);
-    } else {
-      return items.slice(0, 10);
-    }
-  },
+    WriteBaidu: (data) => {
+      let text = "";
+      let slicedData = [];
+      try {
+        slicedData = QuoteSearch.Suggest.Slice(data.s);
+      } catch (TypeError) {
+        QuoteSearch.Suggest.wrap.html("");
+        return;
+      }
+      slicedData.forEach((res) => {
+        text += `<div>${res}</div>`;
+      });
+      QuoteSearch.Suggest.wrap.html(text);
+    },
 
-  WriteBingSuggestion: (data) => {
-    let text = "";
-    let slicedData = QuoteSearch.SliceSuggestions(data.AS.Results[0].Suggests);
-    slicedData.forEach((res) => {
-      text += `<div>${res.Txt}</div>`;
-    });
-    QuoteSearch.wrap.html(text);
-  },
+    WriteGoogle: (data) => {
+      let text = "";
+      let slicedData = [];
+      try {
+        slicedData = QuoteSearch.Suggest.Slice(data[1]);
+      } catch (TypeError) {
+        QuoteSearch.Suggest.wrap.html("");
+        return;
+      }
+      slicedData.forEach((res) => {
+        text += `<div>${res[0]}</div>`;
+      });
+      QuoteSearch.Suggest.wrap.html(text);
+    },
 
-  WriteBaiduSuggestion: (data) => {
-    let text = "";
-    let slicedData = QuoteSearch.SliceSuggestions(data.s);
-    slicedData.forEach((res) => {
-      text += `<div>${res}</div>`;
-    });
-    QuoteSearch.wrap.html(text);
-  },
-
-  WriteGoogleSuggestion: (data) => {
-    let text = "";
-    let slicedData = QuoteSearch.SliceSuggestions(data[1]);
-    slicedData.forEach((res) => {
-      text += `<div>${res[0]}</div>`;
-    });
-    QuoteSearch.wrap.html(text);
-  },
-
-  WriteTaobaoSuggestion: (data) => {
-    let text = "";
-    let slicedData = QuoteSearch.SliceSuggestions(data.result);
-    slicedData.forEach((res) => {
-      text += `<div>${res[0]}</div>`;
-    });
-    QuoteSearch.wrap.html(text);
+    WriteTaobao: (data) => {
+      let text = "";
+      let slicedData = [];
+      try {
+        slicedData = QuoteSearch.Suggest.Slice(data.result);
+      } catch (TypeError) {
+        QuoteSearch.Suggest.wrap.html("");
+        return;
+      }
+      slicedData.forEach((res) => {
+        text += `<div>${res[0]}</div>`;
+      });
+      QuoteSearch.Suggest.wrap.html(text);
+    },
   },
 };
