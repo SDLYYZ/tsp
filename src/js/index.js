@@ -1,4 +1,9 @@
-/* global QuoteSearch TangYan */
+import "../css/global.css";
+import "../css/index.css";
+import "./global";
+import $ from "jquery";
+import { TangYan } from "./tangyan";
+import { QuoteSearch } from "./quoteSearch";
 
 $(() => {
   let searchBar = $("#search");

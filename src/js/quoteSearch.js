@@ -1,4 +1,4 @@
-let QuoteSearch = window.QuoteSearch || {
+export let QuoteSearch = (window.QuoteSearch = {
   sources: [
     {
       name: "bing",
@@ -416,4 +416,4 @@ let QuoteSearch = window.QuoteSearch || {
       QuoteSearch.Suggest.wrap.html(text);
     },
   },
-};
+});
