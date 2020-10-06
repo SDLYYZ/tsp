@@ -9,7 +9,11 @@
   "author": "",
   "license": "",
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
     "eslint": "^7.10.0",
-    "jquery": "^3.5.1"
-  }
+    "eslint-config-alloy": "^3.8.0",
+    "jquery": "^3.5.1",
+    "prettier": "^2.1.2"
+  },
+  "dependencies": {}
 }

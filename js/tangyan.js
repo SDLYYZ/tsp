@@ -1,19 +1,16 @@
-/* exported GetTangYan WriteTangYan */
+let TangYan = window.TangYan || {
+  url: "https://api.lyoi.cc/tangokoto?type=jsonp&_callback=TangYan.Write",
 
-"use strict";
+  Get: function () {
+    let obj = document.createElement("script");
+    obj.src = TangYan.url;
+    document.body.appendChild(obj);
+    obj.remove();
+  },
 
-const tangYanUrl =
-  "https://api.lyoi.cc/tangokoto?type=jsonp&_callback=WriteTangYan";
-
-function GetTangYan() {
-  let obj = document.createElement("script");
-  obj.src = tangYanUrl;
-  document.body.appendChild(obj);
-  obj.remove();
-}
-
-function WriteTangYan(obj) {
-  document.getElementById(
-    "tang-yan"
-  ).innerText = `${obj.hitokoto} ——${obj.from}`;
-}
+  Write: function (obj) {
+    document.getElementById(
+      "tang-yan",
+    ).innerText = `${obj.hitokoto} ——${obj.from}`;
+  },
+};

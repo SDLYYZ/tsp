@@ -1,5 +1,3 @@
-"use strict";
-
 let QuoteSearch = window.QuoteSearch || {
   sources: [
     {
@@ -7,15 +5,16 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["b", "bing"],
       url: "https://www.bing.com/search?q=%s",
       suggest:
-        "https://suggestion.baidu.com/su?"+
-        "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
+        "https://api.bing.com/qsonhs.aspx?" +
+        "type=cb&q=%s&count=10&safesearch=Strict" +
+        "&cb=QuoteSearch.WriteBingSuggestion",
     },
     {
       name: "baidu",
       prefixes: ["bd", "baidu"],
       url: "https://www.baidu.com/s?ie=utf-8&wd=%s",
       suggest:
-        "https://suggestion.baidu.com/su?"+
+        "https://suggestion.baidu.com/su?" +
         "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
     },
     {
@@ -23,8 +22,8 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["g", "gg", "google"],
       url: "https://www.google.com/search?q=%s",
       suggest:
-        "https://suggestion.baidu.com/su?"+
-        "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
+        "http://suggestqueries.google.com/complete/search?client=youtube" +
+        "&q=%s&jsonp=QuoteSearch.WriteGoogleSuggestion",
     },
     {
       name: "luogu",
@@ -62,15 +61,16 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["ddg", "duckduckgo"],
       url: "https://duckduckgo.com/?q=%s",
       suggest:
-        "https://suggestion.baidu.com/su?"+
-        "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
+        "https://api.bing.com/qsonhs.aspx?" +
+        "type=cb&q=%s&count=10&safesearch=Strict" +
+        "&cb=QuoteSearch.WriteBingSuggestion",
     },
     {
       name: "miji search",
       prefixes: ["mj", "mjsou"],
       url: "https://mijisou.com/?q=%s",
       suggest:
-        "https://suggestion.baidu.com/su?"+
+        "https://suggestion.baidu.com/su?" +
         "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
     },
     {
@@ -78,7 +78,7 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["lk", "lookao"],
       url: "https://lookao.com/search?q=%s",
       suggest:
-        "https://suggestion.baidu.com/su?"+
+        "https://suggestion.baidu.com/su?" +
         "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
     },
     {
@@ -86,7 +86,7 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["jd", "jingdong"],
       url: "https://search.jd.com/Search?keyword=%s&enc=utf-8",
       suggest:
-        "https://suggest.taobao.com/sug?code=utf-8"+
+        "https://suggest.taobao.com/sug?code=utf-8" +
         "&q=%s&callback=QuoteSearch.WriteTaobaoSuggestion",
     },
     {
@@ -104,8 +104,9 @@ let QuoteSearch = window.QuoteSearch || {
       prefixes: ["ya", "yandex"],
       url: "https://yandex.com/search/?text=%s",
       suggest:
-        "https://suggestion.baidu.com/su?"+
-        "wd=%s&cb=QuoteSearch.WriteBaiduSuggestion",
+        "https://api.bing.com/qsonhs.aspx?" +
+        "type=cb&q=%s&count=10&safesearch=Strict" +
+        "&cb=QuoteSearch.WriteBingSuggestion",
     },
     {
       name: "oiwki",
@@ -183,30 +184,66 @@ let QuoteSearch = window.QuoteSearch || {
       url: "https://search.bilibili.com/all?keyword=%s",
     },
   ],
-  
+
   wrap: $(),
+  searchBar: $(),
 
   // 当前选中的 suggestion 的 index, -1 表示未选中
-  selectedSuggestion: -1, 
+  selectedSuggestion: -1,
 
-  Init: function (wrap) {
+  Init: (searchBar, wrap) => {
+    QuoteSearch.searchBar = searchBar;
     QuoteSearch.wrap = wrap;
+    searchBar.on("keydown", (ev) => {
+      switch (ev.key) {
+        case "Enter":
+          // Shift + Enter 在新标签页打开搜索结果
+          QuoteSearch.Search(ev.shiftKey);
+          if (!ev.shiftKey) {
+            searchBar.attr("disabled", "disabled");
+            searchBar.attr("placeholder", "Searching...");
+          }
+          searchBar.val("");
+          break;
+        case "ArrowUp":
+          QuoteSearch.SelectUp();
+          ev.preventDefault();
+          break;
+        case "ArrowDown":
+          QuoteSearch.SelectDown();
+          ev.preventDefault();
+          break;
+      }
+    });
+    searchBar.on("keyup", (ev) => {
+      if (ev.key === "Escape") {
+        searchBar[0].blur();
+      }
+    });
+    searchBar.on("input", () => {
+      if (searchBar.val() !== "") {
+        QuoteSearch.GetSuggestion(searchBar.val());
+        QuoteSearch.Blur();
+      }
+    });
   },
-  
-  UpdateCss: function() {
+
+  UpdateCss: () => {
     QuoteSearch.wrap.children().css("background", "rgba(255, 255, 255, 0.25)");
     if (QuoteSearch.selectedSuggestion >= 0) {
-      QuoteSearch.wrap.children().eq(QuoteSearch.selectedSuggestion)
+      QuoteSearch.wrap
+        .children()
+        .eq(QuoteSearch.selectedSuggestion)
         .css("background", "rgba(0, 0, 0, 0.2)");
     }
   },
-  
-  Blur: function() {
+
+  Blur: () => {
     QuoteSearch.selectedSuggestion = -1;
     QuoteSearch.UpdateCss();
   },
 
-  SelectUp: function() {
+  SelectUp: () => {
     --QuoteSearch.selectedSuggestion;
     if (QuoteSearch.selectedSuggestion < 0) {
       QuoteSearch.selectedSuggestion = -1;
@@ -214,7 +251,7 @@ let QuoteSearch = window.QuoteSearch || {
     QuoteSearch.UpdateCss();
   },
 
-  SelectDown: function() {
+  SelectDown: () => {
     ++QuoteSearch.selectedSuggestion;
     if (QuoteSearch.selectedSuggestion >= QuoteSearch.wrap.children().length) {
       QuoteSearch.selectedSuggestion = QuoteSearch.wrap.children().length - 1;
@@ -222,7 +259,37 @@ let QuoteSearch = window.QuoteSearch || {
     QuoteSearch.UpdateCss();
   },
 
-  Search: function (kw, newtab = false) {
+  // 返回 `obj` 或者当前选择的建议候选项文字
+  GetObjOrSelected: (obj) =>
+    QuoteSearch.selectedSuggestion >= 0
+      ? QuoteSearch.wrap.children().eq(QuoteSearch.selectedSuggestion).text()
+      : obj,
+
+  Search: (newtab = false) => {
+    // 打开搜索结果
+    let openResult = (url, keyword) =>
+      window.open(
+        url.replace(
+          "%s",
+          encodeURIComponent(QuoteSearch.GetObjOrSelected(keyword)),
+        ),
+        newtab ? "_blank" : "_self",
+      );
+    let kw = QuoteSearch.searchBar.val();
+    let splitedKw = kw.split(" ");
+    let firstWord = splitedKw[0].toLowerCase(); // 忽略大小写
+    splitedKw.shift();
+    let elseWords = splitedKw.join(" ");
+    // 遍历每个搜索引擎
+    // 如果前缀匹配, 就使用它
+    QuoteSearch.sources.some((source) =>
+      source.prefixes.some(
+        (pr) => "'" + pr === firstWord && openResult(source.url, elseWords),
+      ),
+    ) || openResult(QuoteSearch.sources[0].url, kw);
+  },
+
+  GetSuggestion: (kw) => {
     let splitedKw = kw.split(" ");
     let firstWord = splitedKw[0].toLowerCase();
     splitedKw.shift();
@@ -230,52 +297,18 @@ let QuoteSearch = window.QuoteSearch || {
     let matched = QuoteSearch.sources.some((source) => {
       return source.prefixes.some((prefix) => {
         if ("'" + prefix === firstWord) {
-          if (newtab) {
-            window.open(
-              source.url.replace(
-                "%s",
-                encodeURIComponent(elseWords)
-              ), "_black");
-          } else {
-            window.location = source.url.replace(
+          if (source.suggest) {
+            let obj = document.createElement("script");
+            obj.src = source.suggest.replace(
               "%s",
-              encodeURIComponent(elseWords)
+              encodeURIComponent(elseWords),
             );
+            document.body.appendChild(obj);
+            obj.remove();
+            return true;
           }
-          return true;
         }
-      });
-    });
-    if (!matched) {
-      // 默认使用 bing
-      if (newtab) {
-        window.open(QuoteSearch.sources[0].url.replace(
-          "%s",
-          encodeURIComponent(kw)
-        ), "_black");
-      } else {
-        window.location = QuoteSearch.sources[0].url.replace(
-          "%s",
-          encodeURIComponent(kw)
-        );
-      }
-    }
-  },
-
-  GetSuggestion: function (kw) {
-    let splitedKw = kw.split(" ");
-    let firstWord = splitedKw[0].toLowerCase();
-    splitedKw.shift();
-    let elseWords = splitedKw.join(" ");
-    let matched = QuoteSearch.sources.some((source) => {
-      return source.prefixes.some((prefix) => {
-        if ("'" + prefix === firstWord && source.suggest) {
-          let obj = document.createElement("script");
-          obj.src = source.suggest.replace("%s", encodeURIComponent(elseWords));
-          document.body.appendChild(obj);
-          obj.remove();
-          return true;
-        }
+        return false;
       });
     });
     if (!matched) {
@@ -283,33 +316,55 @@ let QuoteSearch = window.QuoteSearch || {
       let obj = document.createElement("script");
       obj.src = QuoteSearch.sources[0].suggest.replace(
         "%s",
-        encodeURIComponent(kw)
+        encodeURIComponent(kw),
       );
       document.body.appendChild(obj);
       obj.remove();
     }
   },
 
-  WriteBaiduSuggestion: function (data) {
-    let text = "";
+  SliceSuggestions: (items) => {
     let winHeight = $(window).height();
-    let slicedData;
     if (winHeight <= 700) {
-      slicedData = data.s.slice(0, 6);
+      return items.slice(0, 6);
     } else if (winHeight <= 800) {
-      slicedData = data.s.slice(0, 8);
+      return items.slice(0, 8);
     } else {
-      slicedData = data.s.slice(0, 10);
+      return items.slice(0, 10);
     }
+  },
+
+  WriteBingSuggestion: (data) => {
+    let text = "";
+    let slicedData = QuoteSearch.SliceSuggestions(data.AS.Results[0].Suggests);
+    slicedData.forEach((res) => {
+      text += `<div>${res.Txt}</div>`;
+    });
+    QuoteSearch.wrap.html(text);
+  },
+
+  WriteBaiduSuggestion: (data) => {
+    let text = "";
+    let slicedData = QuoteSearch.SliceSuggestions(data.s);
     slicedData.forEach((res) => {
       text += `<div>${res}</div>`;
     });
     QuoteSearch.wrap.html(text);
   },
 
-  WriteTaobaoSuggestion: function (data) {
+  WriteGoogleSuggestion: (data) => {
     let text = "";
-    data.result.forEach((res) => {
+    let slicedData = QuoteSearch.SliceSuggestions(data[1]);
+    slicedData.forEach((res) => {
+      text += `<div>${res[0]}</div>`;
+    });
+    QuoteSearch.wrap.html(text);
+  },
+
+  WriteTaobaoSuggestion: (data) => {
+    let text = "";
+    let slicedData = QuoteSearch.SliceSuggestions(data.result);
+    slicedData.forEach((res) => {
       text += `<div>${res[0]}</div>`;
     });
     QuoteSearch.wrap.html(text);
