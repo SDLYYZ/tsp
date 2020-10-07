@@ -96,10 +96,7 @@
   object-fit: cover;
   z-index: -888;
   transition: 0.5s;
-  background-image: radial-gradient(
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0.5) 100%
-    ),
+  background: radial-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%),
     radial-gradient(rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.3) 166%);
 }
 
