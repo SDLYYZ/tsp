@@ -3,6 +3,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   mode: "development",
@@ -17,33 +18,50 @@ module.exports = {
       title: "Tang Start Page",
       template: "src/index.html",
     }),
+    new MiniCssExtractPlugin({
+      filename: "[name].[hash].css",
+      chunkFilename: "[id].[hash].css",
+    }),
   ],
   output: {
-    filename: "[name].js",
+    filename: "[name].[hash].js",
+    chunkFilename: "[id].[hash].js",
     path: path.resolve(__dirname, "dist"),
   },
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.tsx?$/i,
         use: "ts-loader",
         exclude: /node_modules/,
       },
       {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(png|svg|jpg|gif)$/i,
         use: ["file-loader"],
       },
       {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
         use: ["file-loader"],
       },
     ],
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendor",
+          chunks: "initial",
+          minChunks: 2,
+        },
+      },
+    },
   },
 };
