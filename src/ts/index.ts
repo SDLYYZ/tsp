@@ -7,9 +7,9 @@ import { QuoteSearch } from "./quoteSearch";
 import { AutoSuggestion } from "./autoSuggestion";
 
 $(() => {
-  let searchBar = $("#search");
-  let timeText = $("#time");
-  let suggestionsWrap = $("#suggestions");
+  const searchBar = $("#search");
+  const timeText = $("#time");
+  const suggestionsWrap = $("#suggestions");
 
   function UpdateTime() {
     timeText.html(new Date().format("hh:mm"));
@@ -17,8 +17,8 @@ $(() => {
 
   UpdateTime();
   setInterval(UpdateTime, 1000);
-  let _ = new TangYan();
-  let __ = new QuoteSearch(searchBar, new AutoSuggestion(suggestionsWrap));
+  const _ = new TangYan();
+  const __ = new QuoteSearch(searchBar, new AutoSuggestion(suggestionsWrap));
 
   $(document).on("keydown", (ev: JQuery.KeyDownEvent) => {
     if (

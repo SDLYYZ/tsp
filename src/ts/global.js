@@ -17,7 +17,7 @@ Date.prototype.format = function (format) {
       String(this.getFullYear()).substr(4 - RegExp.$1.length),
     );
   }
-  for (let k in date) {
+  for (const k in date) {
     if (new RegExp("(" + k + ")").test(res)) {
       res = res.replace(
         RegExp.$1,

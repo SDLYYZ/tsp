@@ -98,7 +98,7 @@ export class AutoSuggestion {
     if (items === undefined || items === null) {
       return [];
     }
-    let winHeight = $(window).height();
+    const winHeight = $(window).height();
     if (winHeight <= 700) {
       return items.slice(0, 6);
     } else if (winHeight <= 800) {
@@ -146,7 +146,7 @@ export class AutoSuggestion {
   }
 
   public Get(keyword: string) {
-    let sendAjax = (
+    const sendAjax = (
       to: {
         url: string;
         jsonp: string;
@@ -163,7 +163,7 @@ export class AutoSuggestion {
         },
       });
     };
-    let s = SplitKeyword(keyword);
+    const s = SplitKeyword(keyword);
     if (s.others === "" || s.others === null || s.others === undefined) {
       this.wrap.html("");
       return;

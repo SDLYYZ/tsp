@@ -2,14 +2,14 @@ import { AutoSuggestion } from "./autoSuggestion";
 
 // 将 keyword 分为 `quotePrefix?` 和 `others` 两部分
 export function SplitKeyword(keyword: string) {
-  let splitedKw = keyword.split(" ");
-  let firstWord = splitedKw[0].toLowerCase(); // 忽略大小写
+  const splitedKw = keyword.split(" ");
+  const firstWord = splitedKw[0].toLowerCase(); // 忽略大小写
   // 以 `'` 开头
   if (firstWord[0] !== "'") {
     return { prefix: null, others: keyword };
   } else {
     splitedKw.shift();
-    let elseWords = splitedKw.join(" ");
+    const elseWords = splitedKw.join(" ");
     // 将开头的 `'` 删除
     return { prefix: firstWord.substr(1), others: elseWords };
   }
@@ -228,7 +228,7 @@ export class QuoteSearch {
 
   public Search(newtab = false) {
     // 打开搜索结果
-    let openResult = (url: string, keyword: string) =>
+    const openResult = (url: string, keyword: string) =>
       window.open(
         url.replace(
           "%s",
@@ -236,7 +236,7 @@ export class QuoteSearch {
         ),
         newtab ? "_blank" : "_self",
       );
-    let s = SplitKeyword(this.searchBar.val().toString());
+    const s = SplitKeyword(this.searchBar.val().toString());
     console.log(s);
     // 遍历每个搜索引擎
     // 如果前缀匹配, 就使用它

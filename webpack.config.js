@@ -11,7 +11,7 @@ module.exports = {
     hints: false,
   },
   entry: { index: "./src/ts/index.ts" },
-  devtool: "inline-source-map",
+  devtool: "inline-cheap-module-source-map",
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
