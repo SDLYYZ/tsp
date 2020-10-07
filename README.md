@@ -6,17 +6,13 @@
 
 ## 如何安装
 
-Tsp 是直接由 html, css 和 js 写成的, 因此您不需要编译, 可以直接克隆或者下载本仓库, 并打开根目录下的 index.html 来使用 tsp.
+此项目已开启 github page, 将你的浏览器主页设置为 `https://sdlyyz.github.io/tsp/` 即可.
 
-### 具体步骤
-
-此项目已开启 gitee page, 将你的浏览器主页设置为 `https://yzy-1.gitee.io/tsp/` 即可.
-
-> 若需手动安装, 请按照下面的步骤操作:
+> 若需本地安装, 请按照下面的步骤操作:
 >
-> 1. 点击右上角绿色的 "Code" 按钮, 选择 "Download ZIP"
-> 1. 解压得到的文件
-> 1. 用浏览器打开 `index.html` 即可
+> 1. 克隆本仓库
+> 1. 运行 `npm install && npm run build`
+> 1. 生成的 `index.html` 会在 `docs/` 中
 
 ## 引号搜索
 
