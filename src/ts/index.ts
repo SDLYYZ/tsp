@@ -1,9 +1,10 @@
 import "../css/global.css";
 import "../css/index.css";
 import "./global";
-import $ from "jquery";
 import { TangYan } from "./tangyan";
+import "./tangyan.js";
 import { QuoteSearch } from "./quoteSearch";
+import { AutoSuggestion } from "./autoSuggestion";
 
 $(() => {
   let searchBar = $("#search");
@@ -16,10 +17,10 @@ $(() => {
 
   UpdateTime();
   setInterval(UpdateTime, 1000);
-  TangYan.Get();
-  QuoteSearch.Init(searchBar, suggestionsWrap);
+  let _ = new TangYan();
+  let __ = new QuoteSearch(searchBar, new AutoSuggestion(suggestionsWrap));
 
-  $(document).on("keydown", (ev) => {
+  $(document).on("keydown", (ev: JQuery.KeyDownEvent) => {
     if (
       document.activeElement === document.body &&
       !ev.ctrlKey &&

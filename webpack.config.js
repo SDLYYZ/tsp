@@ -1,9 +1,15 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  entry: "./src/js/index.js",
+  mode: "development",
+  performance: {
+    hints: false,
+  },
+  entry: { index: "./src/ts/index.ts" },
   devtool: "inline-source-map",
   plugins: [
     new CleanWebpackPlugin(),
@@ -13,11 +19,16 @@ module.exports = {
     }),
   ],
   output: {
-    filename: "app.js",
+    filename: "[name].js",
     path: path.resolve(__dirname, "dist"),
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
@@ -31,5 +42,8 @@ module.exports = {
         use: ["file-loader"],
       },
     ],
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"],
   },
 };
