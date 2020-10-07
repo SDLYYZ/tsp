@@ -26,7 +26,8 @@ $(() => {
       !ev.ctrlKey &&
       !ev.altKey &&
       !ev.metaKey &&
-      ev.key !== "Enter"
+      ev.key !== "Enter" &&
+      ev.key !== "Escape"
     ) {
       searchBar.attr("placeholder", "Search");
       searchBar.removeAttr("disabled");
