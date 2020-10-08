@@ -3,7 +3,6 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
@@ -19,13 +18,10 @@ module.exports = {
       title: "Tang Start Page",
       filename: "index.html",
       template: path.resolve(__dirname, "src/index.html"),
-    }),
-    new FaviconsWebpackPlugin({
-      logo: path.resolve(__dirname, "src/favicon.ico"),
-      prefix: "assets/",
+      favicon: path.resolve(__dirname, "src/favicon.ico"),
     }),
     new MiniCssExtractPlugin({
-      filename: "assets/[name].css",
+      filename: "[name].css",
     }),
   ],
   output: {
@@ -50,7 +46,7 @@ module.exports = {
           {
             loader: "file-loader",
             options: {
-              name: "assets/[name].[ext]",
+              name: "[contenthash:7].[ext]",
             },
           },
         ],
@@ -61,7 +57,7 @@ module.exports = {
           {
             loader: "file-loader",
             options: {
-              name: "assets/[name].[ext]",
+              name: "[contenthash:7].[ext]",
             },
           },
         ],

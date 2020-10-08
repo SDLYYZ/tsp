@@ -15,7 +15,6 @@
     "eslint": "^7.10.0",
     "eslint-config-alloy": "^3.8.0",
     "eslint-plugin-html": "^6.1.0",
-    "favicons-webpack-plugin": "^4.2.0",
     "file-loader": "^6.1.0",
     "html-webpack-plugin": "^4.5.0",
     "htmlhint": "^0.14.1",
