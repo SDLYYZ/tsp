@@ -2,7 +2,6 @@ import "../css/global.css";
 import "../css/index.css";
 import "./global";
 import { TangYan } from "./tangyan";
-import "./tangyan.js";
 import { QuoteSearch } from "./quoteSearch";
 import { AutoSuggestion } from "./autoSuggestion";
 

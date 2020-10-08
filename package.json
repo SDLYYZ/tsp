@@ -2,6 +2,7 @@
   "name": "tsp",
   "scripts": {
     "build": "webpack",
+    "dev": "webpack-dev-server --open",
     "lint": "eslint src/**/*.js src/**/*.ts; htmlhint src/"
   },
   "devDependencies": {
@@ -14,6 +15,7 @@
     "eslint": "^7.10.0",
     "eslint-config-alloy": "^3.8.0",
     "eslint-plugin-html": "^6.1.0",
+    "favicons-webpack-plugin": "^4.2.0",
     "file-loader": "^6.1.0",
     "html-webpack-plugin": "^4.5.0",
     "htmlhint": "^0.14.1",
@@ -23,7 +25,8 @@
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {}
 }

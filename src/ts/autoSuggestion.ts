@@ -1,4 +1,5 @@
 import { QuoteSearch, SplitKeyword } from "./quoteSearch";
+
 export class AutoSuggestion {
   public static sources = {
     bing: {

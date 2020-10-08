@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
@@ -10,22 +11,26 @@ module.exports = {
   performance: {
     hints: false,
   },
-  entry: { index: "./src/ts/index.ts" },
+  entry: { index: path.resolve(__dirname, "src/ts/index.ts") },
   devtool: "inline-cheap-module-source-map",
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: "Tang Start Page",
-      template: "src/index.html",
+      filename: "index.html",
+      template: path.resolve(__dirname, "src/index.html"),
+    }),
+    new FaviconsWebpackPlugin({
+      logo: path.resolve(__dirname, "src/favicon.ico"),
+      prefix: "assets/",
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].[hash].css",
-      chunkFilename: "[id].[hash].css",
+      filename: "assets/[name].css",
     }),
   ],
   output: {
-    filename: "[name].[hash].js",
-    chunkFilename: "[id].[hash].js",
+    filename: "[name].js",
+    chunkFilename: "[id].css",
     path: path.resolve(__dirname, "docs"),
   },
   module: {
@@ -41,27 +46,32 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|gif)$/i,
-        use: ["file-loader"],
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "assets/[name].[ext]",
+            },
+          },
+        ],
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
-        use: ["file-loader"],
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "assets/[name].[ext]",
+            },
+          },
+        ],
       },
     ],
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          name: "vendor",
-          chunks: "initial",
-          minChunks: 2,
-        },
-      },
-    },
+  devServer: {
+    contentBase: false,
   },
 };
